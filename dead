@@ -5,7 +5,7 @@ local settings = {
 };
 
 local drawing = loadstring(game:HttpGet("https://github.com/GhostDuckyy/UI-Libraries/blob/main/DEADCELL%20REMAKE/misc/extension.lua?raw=true"))();
-local tween = loadstring(game:HttpGet("https://raw.githubusercontent.com/vozoid/utility/main/Tween.lua"))()
+local tween = loadstring(game:HttpGet("https://raw.githubusercontent.com/ksorki04-creator/chud/refs/heads/main/cell.lua"))()
 
 -- // UI LIBRARY
 if not isfolder(settings.folder_name) then
@@ -15,10 +15,10 @@ if not isfolder(settings.folder_name) then
 end;
 
 local images = {
-    ['gradient90'] = "https://raw.githubusercontent.com/portallol/luna/main/Gradient.png";
-    ['gradient180'] = "https://raw.githubusercontent.com/portallol/luna/main/Gradient180.png";
-    ['arrow_down'] = "https://i.imgur.com/tVqy0nL.png";
-    ['arrow_up'] = "https://i.imgur.com/SL9cbQp.png";
+    ['gradient90'] = "https://raw.githubusercontent.com/GhostDuckyy/UI-Libraries/refs/heads/main/DEADCELL%20REMAKE/image/Gradient.png";
+    ['gradient180'] = "https://raw.githubusercontent.com/GhostDuckyy/UI-Libraries/refs/heads/main/DEADCELL%20REMAKE/image/Gradient180.png";
+    ['arrow_down'] = "https://raw.githubusercontent.com/GhostDuckyy/UI-Libraries/refs/heads/main/DEADCELL%20REMAKE/image/arrow_down.png";
+    ['arrow_up'] = "https://raw.githubusercontent.com/GhostDuckyy/UI-Libraries/refs/heads/main/DEADCELL%20REMAKE/image/arrow_up.png";
 }
 for i,v in next, images do
     if not isfile(settings.folder_name..'/assets/'..i..'.ln') then
