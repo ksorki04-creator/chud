@@ -3,12 +3,12 @@
     bored#9316 @wally hub user - Helped make library
 ]]
 --  Variables
-local ws = gameGetService(Workspace)
-local uis = gameGetService(UserInputService)
-local rs = gameGetService(RunService)
-local hs = gameGetService(HttpService)
-local plrs = gameGetService(Players)
-local stats = gameGetService(Stats)
+local ws = game:GetService("Workspace")
+local uis = game:GetService("UserInputService")
+local rs = game:GetService("RunService")
+local hs = game:GetService("HttpService")
+local plrs = game:GetService("Players")
+local stats = game:GetService("Stats")
 -- UI Variables
 local library = {
     drawings = {},
@@ -20,9 +20,9 @@ local library = {
     ended = {},
     colors = {},
     folders = {
-        main = Linux,
-        assets = Linuxassets,
-        configs = Linuxconfigs
+        main = "Linux",
+        assets = "Linux/assets",
+        configs = "Linux/configs"
     },
     shared = {
         initialized = false,
@@ -54,15 +54,15 @@ local theme = {
 do
     function utilitySize(xScale,xOffset,yScale,yOffset,instance)
         if instance then
-            local x = xScaleinstance.Size.x+xOffset
-            local y = yScaleinstance.Size.y+yOffset
+            local x = xScale*instance.Size.x+xOffset
+            local y = yScale*instance.Size.y+yOffset
             --
             return Vector2.new(x,y)
         else
             local vx,vy = ws.CurrentCamera.ViewportSize.x,ws.CurrentCamera.ViewportSize.y
             --
-            local x = xScalevx+xOffset
-            local y = yScalevy+yOffset
+            local x = xScale*vx+xOffset
+            local y = yScale*vy+yOffset
             --
             return Vector2.new(x,y)
         end
@@ -70,15 +70,15 @@ do
     --
     function utilityPosition(xScale,xOffset,yScale,yOffset,instance)
         if instance then
-            local x = instance.Position.x+xScaleinstance.Size.x+xOffset
-            local y = instance.Position.y+yScaleinstance.Size.y+yOffset
+            local x = instance.Position.x+xScale*instance.Size.x+xOffset
+            local y = instance.Position.y+yScale*instance.Size.y+yOffset
             --
             return Vector2.new(x,y)
         else
             local vx,vy = ws.CurrentCamera.ViewportSize.x,ws.CurrentCamera.ViewportSize.y
             --
-            local x = xScalevx+xOffset
-            local y = yScalevy+yOffset
+            local x = xScale*vx+xOffset
+            local y = yScale*vy+yOffset
             --
             return Vector2.new(x,y)
         end
@@ -240,12 +240,12 @@ do
             end
         end
         if instance.__OBJECT_EXISTS then
-            instanceRemove()
+            instance:Remove()
         end
     end
     --
     function utilityGetSubPrefix(str)
-        local str = tostring(str)gsub( ,)
+        local str = tostring(str):gsub(" ", "")
         local var = 
         --
         if #str == 2 then
@@ -267,7 +267,7 @@ do
         for i,v in pairs(library.connections) do
             if v == connection then
                 library.connections[i] = nil
-                vDisconnect()
+                v:Disconnect()
             end
         end
     end
@@ -286,7 +286,7 @@ do
         }
         --
         local mouseLocation = utilityMouseLocation()
-	    return (mouseLocation.x = values[1] and mouseLocation.x = (values[1] + (values[3] - values[1]))) and (mouseLocation.y = values[2] and mouseLocation.y = (values[2] + (values[4] - values[2])))
+	    return (mouseLocation.x >= values[1] and mouseLocation.x <= (values[1] + (values[3] - values[1]))) and (mouseLocation.y >= values[2] and mouseLocation.y <= (values[2] + (values[4] - values[2])))
     end
     --
     function utilityGetTextBounds(text, textSize, font)
@@ -316,7 +316,7 @@ do
             data = readfile(library.folders.assets....imageName...png)
         else
             if imageLink then
-                data = gameHttpGet(imageLink)
+                data = game:HttpGet(imageLink)
                 writefile(library.folders.assets....imageName...png, data)
             else
                 return
@@ -340,17 +340,17 @@ do
         local function lerp()
             for i,v in pairs(instanceTo) do
                 if instance.__OBJECT_EXISTS then
-                    instance[i] = ((v - currentIndex[i])  currentTime  instanceTime) + currentIndex[i]
+                    instance[i] = ((v - currentIndex[i]) * currentTime / instanceTime) + currentIndex[i]
                 end
             end
         end
         --
-        connection = rs.RenderSteppedConnect(function(delta)
-            if currentTime  instanceTime then
+        connection = rs.RenderStepped:Connect(function(delta)
+            if currentTime < instanceTime then
                 currentTime = currentTime + delta
                 lerp()
             else
-                connectionDisconnect()
+                connection:Disconnect()
             end
         end)
     end
@@ -607,7 +607,7 @@ do
         --
         function windowUnload()
             for i,v in pairs(library.connections) do
-                vDisconnect()
+                v:Disconnect()
                 v = nil
             end
             --
@@ -618,7 +618,7 @@ do
                         v[1] = nil
                         v = nil
                         --
-                        instanceRemove()
+                        instance:Remove()
                     end
                 end)()
             end
@@ -631,7 +631,7 @@ do
                         v[1] = nil
                         v = nil
                         --
-                        instanceRemove()
+                        instance:Remove()
                     end
                 end)()
             end
@@ -779,8 +779,8 @@ do
             utilityConnection(rs.RenderStepped, function(FPS)
                 library.shared.ping = stats.NetworkFindFirstChild(ServerStatsItem) and tostring(math.floor(stats.Network.ServerStatsItem[Data Ping]GetValue())) or Unknown
                 --
-local GameName = gameGetService(MarketplaceService)GetProductInfo(game.PlaceId).Name
-                if (tick() - Tick)  0.15 then
+local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+                if (tick() - Tick) > 0.15 then
                     watermark_title.Text = string.format(ZeeBot %s,  Fps = %u,   ..GameName, library.shared.ping, library.shared.fps)
                     window.watermarkUpdateSize()
                     --
@@ -1541,14 +1541,14 @@ local GameName = gameGetService(MarketplaceService)GetProductInfo(game.PlaceId).
             end
             --[[
             if Input.KeyCode == Enum.KeyCode.P then
-                local plrs = gameGetService(Players)
+                local plrs = game:GetService("Players")
                 local plr = plrs.LocalPlayer
                 if #plrsGetPlayers() = 1 then
                     plrKick(nRejoining...)
                     wait()
-                    gameGetService('TeleportService')Teleport(game.PlaceId, plr)
+                    game:GetService('TeleportService'):Teleport(game.PlaceId, plr)
                 else
-                    gameGetService('TeleportService')TeleportToPlaceInstance(game.PlaceId, game.JobId, plr)
+                    game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, game.JobId, plr)
                 end
             end]]
         end
@@ -5559,3 +5559,4 @@ local m_thread = task do
 end
 
 return library, library.pointers, theme -- utility
+
